@@ -1,6 +1,6 @@
 //Váriaveis e seleções de elementos HTMl key-29dee0cde2e8de785501728e8861de9e
 
-const apiKei = "8dfde8a8"
+const apiKei = "d9c8003e68cdca1985da485514d386dd"
 const apiCountryUrl = "https://countryflagsapi.com/png/"
 
 const cityInput = document.getElementById('city-input')
@@ -20,9 +20,9 @@ const weatherConteiner = document.getElementById('weather-data')
 
 const getWeatherData = async(city) => {
 
-    const apiWeatherURL = `https://api.hgbrasil.com/weather?key=${apiKei}a8&city_name=${city}`
+    const apiWeatherURL = `https://api.openweathermap.org/data/3.0!/onecall?q=${city}&units=metric&appid=${apiKei}&lang=pt_br`
 
-    const res = await fetch(apiWeatherURL)
+    const res = await fetch(apiWeatherURL).catch(error => console.log(error))
     const data = await res.json()
 
     console.log(res)
@@ -35,19 +35,19 @@ const showWeatherData = async(city) => {
 
     const data = await getWeatherData(city)
 
-    cityElement.innerText = data.city_name
+    cityElement.innerText = data.name
     countryElement.setAttribute(
         "src",
-        `https://countryflagsapi.com/png/br` // <-Modificar essa parte posteriormente
+        `https://countryflagsapi.com/png/${data.sys.country}`
     )
-    tempElement.innerText = parseInt(data.temp)
-    descElement.innerText = data.description
+    tempElement.innerText = parseInt(data.main.temp)
+    descElement.innerText = data.weather[0].description
     weatherIconElement.setAttribute(
         "src",
-        `http://openweathermap.org/img/wn/${data.description}.png`
+        `http://openweathermap.org/img/wn/${data.weather[0].description}.png`
     )
-    humidityElement.innerText = `${data.humidity}%`
-    windElement.innerText = `${data.wind_speedy} km/h`
+    humidityElement.innerText = `${data.main.humidity}%`
+    windElement.innerText = `${data.main.speed} km/h`
 
     weatherConteiner.classList.remove('hiden')
 }
